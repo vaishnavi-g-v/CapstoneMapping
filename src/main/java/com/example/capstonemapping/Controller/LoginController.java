@@ -6,6 +6,7 @@ import com.example.capstonemapping.Entity.Teacher;
 import com.example.capstonemapping.Repository.StudentRepository;
 import com.example.capstonemapping.Repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -44,7 +45,7 @@ public class LoginController {
             Optional<Student> s = studentRepository.findById(username);
             if(!s.isEmpty()){
                 if(s.get().getPswd().equals(password)){
-                    redirect = "redirect:/student/"+username;
+                    redirect = "redirect:/student/profile/"+username;
                 }
             }
         } else if (role.equals("t")) {
@@ -57,4 +58,9 @@ public class LoginController {
         }
         return redirect;
     }
+
+//    @GetMapping(path = "/error")
+//    public ResponseEntity<String> handleError(){
+//
+//    }
 }

@@ -107,16 +107,16 @@
 <!--            </form>-->
 <!--        </div>-->
 
-<!--        <div th:if="${teamEligibility}" class="profile-box">-->
-<!--            <div th:if="${hasTeam}">-->
-<!--                <p>Your Team:</p>-->
-<!--                <a th:href="@{'/teampage/' + ${team_id} + '/' + ${username}}" class="btn btn-primary">Team Page</a>-->
-<!--            </div>-->
-<!--            <div th:if="${not hasTeam}">-->
-<!--                <p>Create a Team:</p>-->
-<!--                <a th:href="@{'/teamformpage/' + ${username}}" class="btn btn-primary">Create Team</a>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div th:if="${teamEligibility}" class="profile-box">
+            <div th:if="${hasTeam}">
+                <p>Your Team:</p>
+                <a th:href="@{'/team' + ${team_id} + '/' + ${username}}" class="btn btn-primary">Team Page</a>
+            </div>
+            <div th:if="${!hasTeam}">
+                <p>Create a Team:</p>
+                <a th:href="@{'/student/teamform?studentId='+${username}}" class="btn btn-primary">Create Team</a>
+            </div>
+        </div>
     </div>
 </body>
 

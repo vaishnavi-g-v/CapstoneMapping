@@ -111,4 +111,14 @@ public class Student {
                 ", outgoing year=" + this.outgoing_year +
                 "}";
     }
+
+    public boolean teamEligibility(){
+        if(semester < 5) return false;
+        return true;
+    }
+
+    public boolean hasTeam(){
+        if(team==null) return false;
+        return true;
+    }
 }

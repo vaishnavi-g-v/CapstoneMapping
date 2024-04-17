@@ -128,7 +128,7 @@
             </thead>
             <tbody>
                 <tr th:each="row : ${rows}">
-                    <td th:each="cell : ${row}" th:text="${cell}">Cell</td>
+                    <td th:text="cell : ${row}" th:text="${cell}">Cell</td>
                 </tr>
             </tbody>
         </table>
