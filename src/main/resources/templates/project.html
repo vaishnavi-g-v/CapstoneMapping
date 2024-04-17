@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Project Page</title>
+    <link rel="stylesheet" href="@{static/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: aqua;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .box {
+            width: 30%;
+            height: 300px;
+            border: 3px solid #343a40;
+            text-align: center;
+            display: inline-block;
+            padding: 20px;
+            margin: 25px;
+            background-color: #fff;
+            box-shadow: 0px 0px 15px 0px #000;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .box:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 20px 0px #000;
+        }
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            border: 3px solid rgb(9, 11, 11);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #343a40;
+            color: aqua;
+        }
+
+        .table td {
+            background-color: #f7f7f7;
+            color: #343a40;
+        }
+
+        .table tr:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark form-row">
+        <a class="navbar-brand" href="#" th:style="'color: aqua'">Project Page</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" th:if="${isStudent}">
+                    <a class="nav-link" th:href="@{studentprofile/{username}(username=${srn})}" th:style="'color: aqua'">Home</a>
+                </li>
+                <li class="nav-item" th:if="${not isStudent}">
+                    <a class="nav-link" th:href="@{teacherprofile/{username}(username=${srn})}" th:style="'color: aqua'">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{teampage/{srn}/{team_id}(srn=${srn},team_id=${team_id})}" th:style="'color: aqua'">Team Page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{reviewpage/{srn}/{team_id}(srn=${srn},team_id=${team_id})}" th:style="'color: aqua'">Reviews</a>
+                </li>
+            </ul>
+        </div>
+        <h3 th:style="'color: aqua; text-align: center;'">Team [[${team_id}]]</h3>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 th:style="'font-family:Georgia, 'Times New Roman', Times, serif;'">Project Details</h1>
+        <table class="table">
+            <tr>
+                <th>Problem Statement</th>
+                <td th:text="${problem_statement}"></td>
+            </tr>
+            <tr>
+                <th>Project ID</th>
+                <td th:text="${project_id}"></td>
+            </tr>
+            <tr>
+                <th>Domain</th>
+                <td th:text="${domain}"></td>
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <td th:text="${start_d}"></td>
+            </tr>
+            <tr>
+                <th>End Date</th>
+                <td th:text="${end_d}"></td>
+            </tr>
+            <tr>
+                <th>Current Phase</th>
+                <td th:text="${cur_phase}"></td>
+            </tr>
+            <tr>
+                <th>Supervisor for your Project</th>
+                <td th:text="${Fname + ' ' + Lname}"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

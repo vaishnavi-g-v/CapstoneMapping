@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Request Status</title>
+    <link rel="stylesheet" th:href="@{static/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .box {
+            width: 32%; /* Adjust the width as needed */
+            height: 300px; /* Adjust the height as needed */
+            border: 2px solid #333;
+            text-align: center;
+            display: inline-block;
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 5px 5px 5px #000;
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark form-row">
+        <a class="navbar-brand" href="#" style="align-items: center; color: aqua;">Request Status</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{studentprofile/(username=${srn})}" style="color: aqua;">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{teampage/(srn=${srn}, team_id=${team_id})}" style="color: aqua;">Return to Team Page</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="color: rgb(0, 0, 0);">Request Status</h1>
+        <h3>Wait for more requests and then start the project</h3>
+        <div th:each="request : ${result}">
+            <div class="box">
+                <h2 th:text="'Request ID: ' + ${request[0]}"></h2>
+                <p th:text="'Team ID: ' + ${team_id}"></p>
+                <p th:text="'Supervisor Name: ' + ${request[1]} + ' ' + ${request[2]}"></p>
+                <p th:text="'Domain: ' + ${request[3]}"></p>
+                <p th:text="'Idea: ' + ${request[4]}"></p>
+                <p>Status: 
+                    <span th:if="${request[5] == 0}">Pending</span>
+                    <span th:if="${request[5] == 1}">Accepted</span>
+                    <span th:if="${request[5] == -1}">Rejected</span>
+                </p>
+                <button th:id="${request[0]}" th:if="${request[5]==1}">Start Project</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function sendData(id) {
+            console.log('in sendData');
+            $.ajax({
+                url: '[[${redirectlink}]]',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({'id': id}),
+                success: function(response) { 
+                    window.location.replace(response); 
+                }, 
+                error: function(error) { 
+                    alert(error); 
+                } 
+            });
+        }
+
+        $(document).ready(function() {
+            $("button").click(function() {
+                var id = $(this).attr('id');
+                console.log(id);
+                sendData(id);
+            });
+        });
+        /*]]>*/
+    </script>
+
+</body>
+
+</html>

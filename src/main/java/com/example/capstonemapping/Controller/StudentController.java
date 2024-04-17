@@ -5,6 +5,7 @@ import com.example.capstonemapping.Repository.StudentRepository;
 import com.example.capstonemapping.Repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -28,9 +29,14 @@ public class StudentController {
     }
 
     @GetMapping(path="/{srn}")
-    public @ResponseBody Student getStudentById(@PathVariable String srn) {
+    public String getStudentById(@PathVariable String srn, Model model) {
+        System.out.println("REACHED");
         Optional<Student> s = studentRepository.findById(srn);
-        return s.get();
+        Student student = s.get();
+        model.addAttribute("first_name", student.getFName());
+        model.addAttribute("last_name", student.getLname());
+        model.addAttribute("email_id", student.getEmail());
+        return "studentprofile";
     }
 
     @GetMapping(path="/teamform")

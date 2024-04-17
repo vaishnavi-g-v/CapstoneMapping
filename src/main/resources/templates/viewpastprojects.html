@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Projects</title>
+    <link rel="stylesheet" href="@{${#mvc.url('classpath:/static/style.css').toUri()}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .request-box {
+            border: 2px solid #333;
+            padding: 10px;
+            margin: 0px;
+            cursor: pointer;
+            width: 100%;
+            background-color: #f5f5f5;
+            margin-bottom: 20px;
+        }
+
+        .requests {
+            width: 100%;
+        }
+
+        .team-info-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .team-info-table th,
+        .team-info-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .team-info-table th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .team-info-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .no-projects-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 40px;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark form-row">
+        <a class="navbar-brand" href="#" style="color: aqua">Past Projects</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{${'teacherprofile/' + username}}" style="color: aqua">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container">
+        <div th:if="${not #lists.isEmpty(requests)}">
+            <div th:each="request : ${requests}" class="request-box">
+                <h3 th:text="'Project ID: ' + ${request['project_id']}" style="font-family: Georgia, 'Times New Roman', Times, serif;"></h3>
+                <table class="table team-info-table">
+                    <thead>
+                        <tr>
+                            <th style="color: aqua;">Team ID</th>
+                            <th style="color: aqua;">Start Date</th>
+                            <th style="color: aqua;">End Date</th>
+                            <th style="color: aqua;">Domain</th>
+                            <th style="color: aqua;">Idea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td th:text="${request['team_id']}"></td>
+                            <td th:text="${request['start_date']}"></td>
+                            <td th:text="${request['end_date']}"></td>
+                            <td th:text="${request['domain']}"></td>
+                            <td th:text="${request['idea']}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h4 style="font-family: Georgia, 'Times New Roman', Times, serif;">Team Information</h4>
+                <table class="table team-info-table">
+                    <thead>
+                        <tr>
+                            <th style="color: aqua;">Student ID</th>
+                            <th style="color: aqua;">Student First Name</th>
+                            <th style="color: aqua;">Student Last Name</th>
+                            <th style="color: aqua;">CGPA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="info : ${request.team_info[2]}">
+                            <td th:text="${info[0]}"></td>
+                            <td th:text="${info[1]}"></td>
+                            <td th:text="${info[2]}"></td>
+                            <td th:text="${info[3]}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div th:unless="${not #lists.isEmpty(requests)}" class="no-projects-message">No past projects available.</div>
+    </div>
+
+</body>
+
+</html>

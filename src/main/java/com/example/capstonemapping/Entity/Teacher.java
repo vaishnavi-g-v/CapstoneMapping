@@ -18,6 +18,26 @@ public class Teacher {
 
     String email;
 
+    public String getTeacher_id() {
+        return teacher_id;
+    }
+
+    public String getFname() {
+        return Fname;
+    }
+
+    public String getLname() {
+        return Lname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPswd() {
+        return pswd;
+    }
+
     String pswd;
 
     public Teacher(){}

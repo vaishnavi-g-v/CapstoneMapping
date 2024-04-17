@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>Assign Reviewers</title>
+    <link rel="stylesheet" th:href="@{/static/style.css}" href="../css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* Your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: aqua;
+        }
+
+        .sql-query {
+            text-align: center;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #343a40;
+            color: aqua;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: aqua;
+            color: #343a40;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            border: 2px solid #333;
+            margin: 20px auto;
+            background-color: #fff;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #343a40;
+            color: aqua;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/adminprofile(username=${username})}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <form method="POST" action="/URL_TO_SEND_AJAX_REQUEST">
+        <div class="form-group">
+            <label for="batch">Assigning Reviewers for batch:</label>
+            <select name="batch" id="batch">
+                <option th:each="batch : ${batches}" th:value="${batch}" th:text="${batch}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn-primary">Assign Teachers</button>
+    </form>
+
+    <div class="reviewer-table" th:if="${result}">
+        <h2 th:text="'Assigning Reviewers for Phase ' + ${phase} + ' for Capstone'"></h2>
+        <table>
+            <!-- Table content here -->
+            <thead>
+                <tr>
+                    <th>Project ID</th>
+                    <th>Domain</th>
+                    <th>Problem Statement</th>
+                    <th>Teacher ID</th>
+                    <th>Teacher Name</th>
+                    <th>Teacher Email ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="project : ${result}">
+                    <td th:text="${project[0][0]}"></td>
+                    <td th:text="${project[0][1]}"></td>
+                    <td th:text="${project[0][2]}"></td>
+                    <td th:text="${project[1][0][0]}"></td>
+                    <td th:text="${project[1][0][1]} + ' ' + ${project[1][0][2]}"></td>
+                    <td th:text="${project[1][0][3]}"></td>
+                </tr>
+                <tr th:each="project : ${result}">
+                    <td th:text="${project[0][0]}"></td>
+                    <td th:text="${project[0][1]}"></td>
+                    <td th:text="${project[0][2]}"></td>
+                    <td th:text="${project[1][1][0]}"></td>
+                    <td th:text="${project[1][1][1]} + ' ' + ${project[1][1][2]}"></td>
+                    <td th:text="${project[1][1][3]}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>If you want to reassign reviewers, click on ASSIGN TEACHERS AGAIN</h3>
+        <h2 th:text="'If current assignment of reviewers is ok, Click the button below'"></h2>
+        <button id="submitReviewers" th:text="Assign Reviewers"></button>
+    </div>
+
+    <span id="phaseValue" th:text="${phase}" style="display: none;"></span>
+
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            $("#submitReviewers").click(function() {
+                var send = [];
+                var phaseValue = $("#phaseValue").text(); // Get the phase value from the hidden element
+                var l = {'result': send, 'phase': phaseValue}; // Use the retrieved phase value
+                console.log('printing console.log: ', l);
+                $.ajax({
+                    url: '/URL_TO_SEND_AJAX_REQUEST',
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(l),
+                    success: function(response) {
+                        alert("success");
+                    },
+                    error: function(error) {
+                        alert(error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

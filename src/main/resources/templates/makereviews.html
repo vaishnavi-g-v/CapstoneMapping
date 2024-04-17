@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Your CSS styles here */
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#" style="color: aqua;">Teacher Profile</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{${'teacherprofile/' + username}}" style="color: aqua;">Home</a>
+                </li>
+                <li th:if="${activeSupervisor}">
+                    <a class="nav-link" href="${requestslink}" style="color: aqua;">View Requests</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="@{${'/viewactiveprojects/' + username}}" style="color: aqua;">View Active Projects</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="@{${'/viewpastprojects/' + username}}" style="color: aqua;">View Past Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout" style="color: aqua;">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3 th:text="'Reviews for Reviewer ID: ' + ${username}"></h3>
+
+        <div th:if="${requests}">
+            <!-- Display reviews in a table -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Project ID</th>
+                        <th>Phase</th>
+                        <th>Link to project Page</th>
+                        <th>Feedback</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="request : ${requests}">
+                        <td th:text="${request.project_id}"></td>
+                        <td th:text="${request.phase}"></td>
+                        <td><a th:href="${request.link}" th:text="'View Project ' + ${request.project_id}"></a></td>
+                        <td th:if="${request.feedback}" th:text="${request.feedback}"></td>
+                        <td th:unless="${request.feedback}">
+                            <form th:action="@{/makereviews}" method="POST">
+                                <div class="form-group">
+                                    <label for="new_feedback">Make a Review:</label>
+                                    <input type="text" id="new_feedback" name="new_feedback" required>
+                                </div>
+                                <input type="hidden" name="reviewer_id" th:value="${username}">
+                                <input type="hidden" name="project_id" th:value="${request.project_id}">
+                                <input type="hidden" name="phase" th:value="${request.phase}">
+                                <input type="submit" value="Submit Review" class="btn btn-primary">
+                            </form>
+                        </td>
+                        <!-- <td th:text="${request.grade}"></td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h2 th:unless="${requests}">No assigned review</h2>
+    </div>
+</body>
+
+</html>

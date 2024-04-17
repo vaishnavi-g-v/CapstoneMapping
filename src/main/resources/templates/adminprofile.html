@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/static/style.css}" href="../css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: aqua;
+        }
+
+        .custom-button {
+            margin-right: 10px;
+        }
+
+        .dashboard {
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: -250px;
+            background-color: #343a40;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            z-index: 1;
+        }
+
+        .dashboard ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .dashboard ul li {
+            padding: 10px 0;
+        }
+
+        .dashboard ul li a {
+            text-decoration: none;
+            color: aqua;
+            display: block;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .dashboard ul li a:hover {
+            background-color: #272b30;
+        }
+
+        #admin-dashboard-x {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            font-size: 20px;
+            text-decoration: none;
+            color: aqua;
+            cursor: pointer;
+        }
+
+        #admin-dashboard-x:hover {
+            color: #f00;
+        }
+
+        .content {
+            padding: 20px;
+            margin-left: 250px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            border: 2px solid #333;
+            margin: 20px auto;
+            background-color: #fff;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #343a40;
+            color: aqua;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark form-row">
+        <button id="toggleDashboard" class="btn btn-secondary custom-button">Toggle Dashboard</button>
+        <a class="navbar-brand" href="#" th:style="'color: aqua;'">Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout" th:style="'color: aqua;'">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="dashboard" id="dashboard">
+        <ul>
+            <li><a class="nav-link" th:href="@{${adminteacherlink}}" th:style="'color: aqua;'">Teacher Section</a></li>
+            <li><a class="nav-link" th:href="@{${adminstudentlink}}" th:style="'color: aqua;'">Student Section</a></li>
+            <li><a class="nav-link" th:href="@{${adminquerylink}}" th:style="'color: aqua;'">Query Here</a></li>
+            <li><a class="nav-link" th:href="@{${adminreviewerslink}}" th:style="'color: aqua;'">Assign Reviewers</a></li>
+        </ul>
+        <span id="admin-dashboard-x">x</span>
+    </div>
+
+    <div class="content">
+        <table>
+            <tr>
+                <td><strong>Admin ID:</strong></td>
+                <td th:text="${admin_id}"></td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td th:text="${email}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <script th:inline="javascript">
+        const dashboard = document.getElementById('dashboard');
+        const toggleButton = document.getElementById('toggleDashboard');
+        const toggleX = document.getElementById('admin-dashboard-x');
+
+        toggleButton.style.display = 'block';
+
+        toggleButton.addEventListener('click', function() {
+            dashboard.style.left = '0';
+        });
+
+        toggleX.addEventListener('click', function() {
+            if (dashboard.style.left == '0px') {
+                dashboard.style.left = '-250px';
+            }
+        });
+    </script>
+</body>
+
+</html>

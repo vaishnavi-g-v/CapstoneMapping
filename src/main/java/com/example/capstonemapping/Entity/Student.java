@@ -21,6 +21,10 @@ public class Student {
 //    @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private Team team;
 
+    public String getPswd() {
+        return pswd;
+    }
+
     public Integer getOutgoing_year() {
         return outgoing_year;
     }

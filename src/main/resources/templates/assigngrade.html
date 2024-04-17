@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Grade</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* Your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .request-box {
+            border: 2px solid #333;
+            padding: 10px;
+            margin: 0px;
+            cursor: pointer;
+            width: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .requests {
+            width: 100%;
+        }
+
+        .team-info-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .team-info-table th, .team-info-table td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .team-info-table th {
+            background-color: rgb(7, 8, 8);
+            color: #ffffff;
+        }
+
+        .team-info-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .no-projects-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 40px;
+            color: black;
+        }
+
+        button {
+            background-color: #343a40;
+            color: aqua;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: aqua;
+            color: #343a40;
+        }
+
+        select#projectSelect {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url("https://cdn.iconscout.com/icon/free/png-256/chevron-down-4-477044.png") no-repeat scroll right center / 20px 20px;
+        }
+
+        select#gradeSelect {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url("https://cdn.iconscout.com/icon/free/png-256/chevron-down-4-477044.png") no-repeat scroll right center / 20px 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            border: 2px solid #333;
+            margin: 20px auto;
+            background-color: #fff;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #343a40;
+            color: aqua;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark form-row">
+        <a class="navbar-brand" href="#" style="color: aqua">Assign Grade</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('teacherprofile', username=username)}}" style="color: aqua">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <form>
+        <label>Select Project:</label>
+        <select name="project" id="projectSelect">
+            <option value="">Select project</option>
+            <!-- Iterate over projects and render options -->
+            <option th:each="project : ${projects}" th:value="${project[0]}" th:text="'Project ID: ' + ${project[0]} + ', Team ID: ' + ${project[1]}"></option>
+        </select>
+    </form>
+
+    <div id="projectDetails"></div>
+
+    <button id="showReviews">SHOW REVIEWS FOR PROJECT</button>
+
+    <div id="projectReviews"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        // Render projectReviews into a JavaScript variable
+        var projectReviews = /*[[${reviews}]]*/
+
+        // Event listener for projectSelect change
+        document.getElementById("projectSelect").addEventListener("change", function () {
+            var selectedProject = this.value;
+            var projectDetails = document.getElementById("projectDetails");
+            var project = projectReviews.find(function (proj) {
+                return proj[0] === selectedProject;
+            });
+
+            var code = `<p>Details of the selected Project</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Project ID</th>
+                            <th>Team ID</th>
+                            <th>Current Phase</th>
+                            <th>Domain</th>
+                            <th>Problem Statement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${project[0]}</td>
+                            <td>${project[1]}</td>
+                            <td>${project[5]}</td>
+                            <td>${project[6]}</td>
+                            <td>${project[7]}</td>
+                        </tr>
+                    </tbody>
+                </table>`;
+            projectDetails.innerHTML = code;
+        });
+
+        // Event listener for showReviews button click
+        document.getElementById("showReviews").addEventListener("click", function () {
+            var selectedProject = document.getElementById("projectSelect").value;
+            var reviews = document.getElementById("projectReviews");
+            var project = projectReviews.find(function (proj) {
+                return proj[0] === selectedProject;
+            });
+
+            var code = `<p>Reviews for Project ID = ${project[0]} and Phase = ${project[1]}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Reviewer ID</th>
+                            <th>Feedback</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            project[2].forEach(function (review) {
+                code += `<tr><td>${review[0]}</td><td>${review[1]}</td></tr>`;
+            });
+            code += `</tbody></table>`;
+            reviews.innerHTML = code;
+        });
+
+        /*]]>*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{static/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: aqua;
+        }
+
+        .sql-query {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border: 5px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        form {
+            text-align: center;
+            height: 100%;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Updated styles for the dropdown box */
+        select#supervisorSelect {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url("https://cdn.iconscout.com/icon/free/png-256/chevron-down-4-477044.png") no-repeat scroll right center / 20px 20px;
+        }
+
+        /* Updated styles for the buttons */
+        button {
+            background-color: #343a40;
+            color: aqua;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: aqua;
+            color: #343a40;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 5px solid #333;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #343a40;
+            color: aqua;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark form-row">
+        <a class="navbar-brand" href="#" th:style="'align-items: center;'">Request Form</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{studentprofile/(username=${srn})}" style="color: aqua;">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{teampage/(srn=${srn},team_id=${team_id})}" style="color: aqua;">Return to Team Page</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="sql-query">
+        <label for="supervisorSelect">Select Supervisor:</label>
+        <select id="supervisorSelect">
+            <option th:each="teacher : ${teachers}" th:value="${teacher[0]}" th:text="${teacher[1]} + ' ' + ${teacher[2]}"></option>
+        </select>
+
+        <div id="supervisorDetails">
+        </div>
+
+        <button id="addSupervisorButton">ADD SUPERVISOR</button>
+        <button id="deleteSupervisorButton">DELETE SUPERVISOR</button>
+        <div id="addedSupervisors">
+            <ol id="addedSupervisorsList"></ol>
+        </div>
+
+        <div id="ideaSubmission">
+            <form id="requestSubmission">
+                <select name="domain" id="domain">
+                    <option th:each="domain : ${domains}" th:value="${domain}" th:text="${domain}"></option>
+                </select>
+                <input id="idea" type="text" class="form-control" placeholder="Your Idea">
+                <button type="submit">Send Requests</button>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var teachersData = /*[[${teachers}]]*/ [];
+        var teamId = /*[[${team_id}]]*/ '';
+
+        // Adding selected supervisor to the list
+        document.getElementById("addSupervisorButton").addEventListener("click", function() {
+            var addedSupervisors = document.getElementById("addedSupervisorsList");
+            var selectedSupervisor = document.getElementById("supervisorSelect").value;
+            var id;
+            var firstName;
+            var lastName;
+            teachersData.forEach(function(teacher) {
+                if (teacher[0] == selectedSupervisor) {
+                    id = teacher[0];
+                    firstName = teacher[1];
+                    lastName = teacher[2];
+                }
+            });
+            var listItem = "<li data-value=" + id + ">" + firstName + " " + lastName + "</li>";
+            addedSupervisors.innerHTML += listItem;
+        });
+
+        // Deleting the most recent supervisor added
+        document.getElementById("deleteSupervisorButton").addEventListener("click", function() {
+            var addedSupervisorsList = document.getElementById("addedSupervisorsList");
+            if (addedSupervisorsList.children.length > 0) {
+                // Remove the last child (most recent supervisor added)
+                addedSupervisorsList.removeChild(addedSupervisorsList.lastChild);
+            }
+        });
+
+        document.getElementById("supervisorSelect").addEventListener("change", function() {
+            var selectedSupervisor = document.getElementById("supervisorSelect").value;
+            var supervisorDetails = document.getElementById("supervisorDetails");
+            var temp;
+            var domains;
+            var email;
+            var projects;
+            teachersData.forEach(function(teacher) {
+                if (teacher[0] == selectedSupervisor) {
+                    temp = teacher;
+                    domains = teacher[4];
+                    email = teacher[3];
+                    projects = teacher[5];
+                }
+            });
+            var code = "<p><b>Email: " + email + "<b></p><p>Domains: " + domains + "</p><h1>Previous Projects</h1><p><table><thead><tr><th>Project Domain</th><th>Problem Statement</th></tr></thead><tbody id='projectTableBody'></tbody></table></p>";
+            supervisorDetails.innerHTML = code;
+            var tableBody = document.getElementById("projectTableBody");
+            var code = "";
+            projects.forEach(function(project) {
+                code += "<tr><td>" + project[0] + "</td><td>" + project[1] + "</td></tr>";
+            });
+            tableBody.innerHTML = code;
+            updateDomainDropdown(domains);
+        });
+
+        var requestSubmission = document.getElementById("requestSubmission");
+        if (requestSubmission != null && requestSubmission != undefined) {
+            requestSubmission.addEventListener("submit", (e) => {
+                e.preventDefault();
+                let domain = document.getElementById("domain");
+                let idea = document.getElementById("idea");
+                var addedSupervisorsList = document.getElementById("addedSupervisorsList").children;
+                var teachers = [];
+                for (let i = 0; i < addedSupervisorsList.length; i++) {
+                    teachers.push(addedSupervisorsList[i].attributes.getNamedItem("data-value").nodeValue);
+                }
+
+                function sendData(domain, idea, team_id, teachers) {
+                    $.ajax({
+                        url: '[[${sendingrequestslink}]]',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({'domain': domain.value, 'idea': idea.value, 'team_id': team_id, 'teachers': teachers}),
+                        success: function(response) {
+                            window.location.replace(response);
+                        },
+                        error: function(error) {
+                            alert(error);
+                        }
+                    });
+                }
+
+                sendData(domain, idea, teamId, teachers);
+            });
+        }
+
+        function updateDomainDropdown(domains) {
+            var domainDropdown = document.getElementById("domain");
+            domainDropdown.innerHTML = ""; // Clear existing options
+
+            domains.forEach(function(domain) {
+                var option = document.createElement("option");
+                option.value = domain;
+                option.text = domain;
+                domainDropdown.add(option);
+            });
+        }
+
+        /*]]>*/
+    </script>
+</body>
+
+</html>
