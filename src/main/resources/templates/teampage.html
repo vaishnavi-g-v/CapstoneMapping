@@ -97,10 +97,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" th:if="${isStudent}">
-                    <a class="nav-link" th:href="@{/studentprofile/{username}(username=${srn})}" style="color: aqua">Home</a>
+                    <a class="nav-link" th:href="@{/student/profile/{username}(username=${username})}" style="color: aqua">Home</a>
                 </li>
-                <li class="nav-item" th:if="${not isStudent}">
-                    <a class="nav-link" th:href="@{/teacherprofile/{username}(username=${srn})}" style="color: aqua">Home</a>
+                <li class="nav-item" th:if="${!isStudent}">
+                    <a class="nav-link" th:href="@{/teacherprofile/{username}(username=${username})}" style="color: aqua">Home</a>
                 </li>
                 <li class="nav-item" th:if="${hasProject}">
                     <a class="nav-link" th:href="@{/project(srn=${srn},team_id=${team_id})}" style="color: aqua">View Project</a>

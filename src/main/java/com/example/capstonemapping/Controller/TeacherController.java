@@ -9,6 +9,7 @@ import com.example.capstonemapping.Repository.SupervisorRepository;
 import com.example.capstonemapping.Repository.TeacherRepository;
 import com.example.capstonemapping.Repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,20 +28,29 @@ public class TeacherController {
     ReviewRepository reviewRepository;
 
     @GetMapping(path="")
-    public @ResponseBody Iterable<Teacher> getAllStudents() {
+    public @ResponseBody Iterable<Teacher> getAllTeachers() {
         // This returns a JSON or XML with the users
         return teacherRepository.findAll();
     }
 
-    @GetMapping(path="/{id}")
-    public @ResponseBody Teacher getTeacherById(@PathVariable String id) {
-        Optional<Supervisor> s = supervisorRepository.findById(id);
-        System.out.println(s);
-
+    @GetMapping(path="/profile/{id}")
+    public @ResponseBody Teacher getTeacherById(@PathVariable String id, Model model) {
+        System.out.println("Teacher reached");
         Optional<Teacher> t = teacherRepository.findById(id);
         System.out.println(t);
 
+        Optional<Supervisor> s = supervisorRepository.findById(id);
+        System.out.println(s);
+
+
         Teacher p = t.get();
+        boolean isSupervisor = false;
+        if(!s.isEmpty()){
+            isSupervisor = true;
+        }
+
+        model.addAttribute("username", id);
+        model.addAttribute("first_name",teacher. )
 
         return p;
     }

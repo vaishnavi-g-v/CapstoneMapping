@@ -50,8 +50,6 @@ public class StudentController {
                 studentRepository.save(s);
             }
 //            System.out.println(n.getTeamID());
-
-
         }
         System.out.println(teamFormModel);
         return "redirect:/student/profile/"+studentId;
