@@ -38,11 +38,11 @@ public class TeamController {
         List<Student> students = studentRepository.findByTeam(team);
         Optional<Project> p = Optional.ofNullable(projectRepository.findByTeam(team));
         boolean hasProject = p.isPresent();
-
+        boolean isStudent = viewerId.charAt(0) == 'P' ? true : false;
         List<String> columns = new ArrayList<>();
         model.addAttribute("team_name", team.getTeamName());
         model.addAttribute("team_id", team.getTeamID());
-        model.addAttribute("isStudent", true);
+        model.addAttribute("isStudent", isStudent);
         model.addAttribute("hadProject", hasProject);
         model.addAttribute("username", viewerId);
 
@@ -53,10 +53,16 @@ public class TeamController {
         return "teampage";
     }
 
+    // id -- teamID
+    // viewID -- the person viewing
+    //        -- P -- student
+    //        -- T -- teacher
     @GetMapping(path = "/{id}/requests")
-    public @ResponseBody List<Request> getRequests(@PathVariable Integer id) {
+    public @ResponseBody List<Request> getRequests(@PathVariable Integer id, String viewerId) {
         List<Request> requests = requestRepository.findByTeam(teamRepository.findById(id).get());
         return requests;
     }
+
+    @GetMapping(path = "/makerequest/{id}")
 
 }

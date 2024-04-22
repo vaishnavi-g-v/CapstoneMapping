@@ -52,7 +52,7 @@ public class LoginController {
             Optional<Teacher> t = teacherRepository.findById(username);
             if(!t.isEmpty()){
                 if(t.get().getPswd().equals(password)){
-                    redirect = "redirect:/teachers/profile/"+username;
+                    redirect = "redirect:/teacher/profile/"+username;
                 }
             }
         }
